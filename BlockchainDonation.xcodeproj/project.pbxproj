@@ -12,6 +12,9 @@
 		7586FEC321A03DDC00936631 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7586FEC121A03DDC00936631 /* Main.storyboard */; };
 		7586FEC521A03DDE00936631 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7586FEC421A03DDE00936631 /* Assets.xcassets */; };
 		7586FEC821A03DDE00936631 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7586FEC621A03DDE00936631 /* LaunchScreen.storyboard */; };
+		7586FED721A16C0100936631 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FED621A16C0100936631 /* Client.swift */; };
+		7586FEDA21A1779A00936631 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FED921A1779A00936631 /* AsyncOperation.swift */; };
+		7586FEDC21A17B5A00936631 /* GetDonationsChainOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FEDB21A17B5A00936631 /* GetDonationsChainOperation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +25,9 @@
 		7586FEC421A03DDE00936631 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7586FEC721A03DDE00936631 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7586FEC921A03DDE00936631 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7586FED621A16C0100936631 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		7586FED921A1779A00936631 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
+		7586FEDB21A17B5A00936631 /* GetDonationsChainOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDonationsChainOperation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +60,81 @@
 		7586FEBC21A03DDC00936631 /* BlockchainDonation */ = {
 			isa = PBXGroup;
 			children = (
-				7586FEBD21A03DDC00936631 /* AppDelegate.swift */,
-				7586FEBF21A03DDC00936631 /* ViewController.swift */,
-				7586FEC121A03DDC00936631 /* Main.storyboard */,
-				7586FEC421A03DDE00936631 /* Assets.xcassets */,
-				7586FEC621A03DDE00936631 /* LaunchScreen.storyboard */,
-				7586FEC921A03DDE00936631 /* Info.plist */,
+				7586FECF21A16B0C00936631 /* Resources */,
+				7586FED021A16B1600936631 /* Sources */,
+				7586FED121A16B1D00936631 /* Supporting files */,
 			);
 			path = BlockchainDonation;
+			sourceTree = "<group>";
+		};
+		7586FECF21A16B0C00936631 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7586FED221A16B3700936631 /* Storyboards */,
+				7586FEC421A03DDE00936631 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7586FED021A16B1600936631 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				7586FED321A16B4B00936631 /* Donations List */,
+				7586FED521A16BE400936631 /* REST API Client */,
+				7586FED421A16BBE00936631 /* Utils */,
+				7586FEBD21A03DDC00936631 /* AppDelegate.swift */,
+				7586FEBF21A03DDC00936631 /* ViewController.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7586FED121A16B1D00936631 /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				7586FEC921A03DDE00936631 /* Info.plist */,
+			);
+			path = "Supporting files";
+			sourceTree = "<group>";
+		};
+		7586FED221A16B3700936631 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				7586FEC121A03DDC00936631 /* Main.storyboard */,
+				7586FEC621A03DDE00936631 /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		7586FED321A16B4B00936631 /* Donations List */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Donations List";
+			sourceTree = "<group>";
+		};
+		7586FED421A16BBE00936631 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		7586FED521A16BE400936631 /* REST API Client */ = {
+			isa = PBXGroup;
+			children = (
+				7586FED821A1778900936631 /* Operations */,
+				7586FED621A16C0100936631 /* Client.swift */,
+			);
+			path = "REST API Client";
+			sourceTree = "<group>";
+		};
+		7586FED821A1778900936631 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				7586FED921A1779A00936631 /* AsyncOperation.swift */,
+				7586FEDB21A17B5A00936631 /* GetDonationsChainOperation.swift */,
+			);
+			path = Operations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,6 +210,9 @@
 			files = (
 				7586FEC021A03DDC00936631 /* ViewController.swift in Sources */,
 				7586FEBE21A03DDC00936631 /* AppDelegate.swift in Sources */,
+				7586FEDA21A1779A00936631 /* AsyncOperation.swift in Sources */,
+				7586FEDC21A17B5A00936631 /* GetDonationsChainOperation.swift in Sources */,
+				7586FED721A16C0100936631 /* Client.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,7 +360,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G9EJHD637F;
-				INFOPLIST_FILE = BlockchainDonation/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/BlockchainDonation/Supporting files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -302,7 +378,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G9EJHD637F;
-				INFOPLIST_FILE = BlockchainDonation/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/BlockchainDonation/Supporting files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
