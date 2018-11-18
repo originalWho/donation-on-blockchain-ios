@@ -1,21 +1,28 @@
 import Foundation
 
-private struct RegisterDonationResponse: Codable {
-    let key: String
-    let result: Int
+struct RegisterDonationResponse: Codable {
+
+    let requestResponse: RequestResponse
+    let donationID: String
+
+    private enum CodingKeys: String, CodingKey {
+        case requestResponse = "result"
+        case donationID = "key"
+    }
+
 }
 
 final class RegisterDonationOperation: AsyncOperation {
 
     // MARK: - Internal properties
 
-    var donationID: String?
+    var result: RegisterDonationResponse?
 
     // MARK: - Private properties
 
-    private let amount: Double
+    private let amount: DonationAmount
     private let donationDescription: String
-    private let accountID: Int
+    private let accountID: AccountID
 
     private let urlSession: URLSession
     private let baseURL: URL
@@ -37,7 +44,7 @@ final class RegisterDonationOperation: AsyncOperation {
 
     // MARK: - Init
 
-    init(amount: Double, donationDescription: String, accountID: Int, baseURL: URL, urlSession: URLSession = .shared) {
+    init(amount: DonationAmount, donationDescription: String, accountID: AccountID, baseURL: URL, urlSession: URLSession = .shared) {
         self.amount = amount
         self.donationDescription = donationDescription
         self.accountID = accountID
@@ -92,11 +99,10 @@ final class RegisterDonationOperation: AsyncOperation {
 
         do {
             let jsonDecoder = JSONDecoder()
-            let registerDonationResponse = try jsonDecoder.decode(RegisterDonationResponse.self, from: data)
-            donationID = registerDonationResponse.key
+            result = try jsonDecoder.decode(RegisterDonationResponse.self, from: data)
         }
         catch {
-            NSLog("Could not parse data and cast it to type:\(RegisterDonationResponse.self). Error: \(error.localizedDescription)")
+            NSLog("Could not parse data and cast it to type:\(RegisterDonationResponse.self). Error: \(error)")
         }
     }
 

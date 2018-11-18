@@ -15,6 +15,9 @@
 		7586FED721A16C0100936631 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FED621A16C0100936631 /* Client.swift */; };
 		7586FEDA21A1779A00936631 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FED921A1779A00936631 /* AsyncOperation.swift */; };
 		7586FEDC21A17B5A00936631 /* GetDonationsChainOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FEDB21A17B5A00936631 /* GetDonationsChainOperation.swift */; };
+		7586FEDE21A1A78900936631 /* RegisterDonationOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FEDD21A1A78900936631 /* RegisterDonationOperation.swift */; };
+		7586FEE121A1B37E00936631 /* Donation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FEE021A1B37E00936631 /* Donation.swift */; };
+		7586FEE321A1CC4B00936631 /* RequestResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FEE221A1CC4B00936631 /* RequestResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +31,9 @@
 		7586FED621A16C0100936631 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		7586FED921A1779A00936631 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		7586FEDB21A17B5A00936631 /* GetDonationsChainOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDonationsChainOperation.swift; sourceTree = "<group>"; };
+		7586FEDD21A1A78900936631 /* RegisterDonationOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterDonationOperation.swift; sourceTree = "<group>"; };
+		7586FEE021A1B37E00936631 /* Donation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Donation.swift; sourceTree = "<group>"; };
+		7586FEE221A1CC4B00936631 /* RequestResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +128,7 @@
 		7586FED521A16BE400936631 /* REST API Client */ = {
 			isa = PBXGroup;
 			children = (
+				7586FEDF21A1B33F00936631 /* Models */,
 				7586FED821A1778900936631 /* Operations */,
 				7586FED621A16C0100936631 /* Client.swift */,
 			);
@@ -133,8 +140,18 @@
 			children = (
 				7586FED921A1779A00936631 /* AsyncOperation.swift */,
 				7586FEDB21A17B5A00936631 /* GetDonationsChainOperation.swift */,
+				7586FEDD21A1A78900936631 /* RegisterDonationOperation.swift */,
 			);
 			path = Operations;
+			sourceTree = "<group>";
+		};
+		7586FEDF21A1B33F00936631 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7586FEE021A1B37E00936631 /* Donation.swift */,
+				7586FEE221A1CC4B00936631 /* RequestResponse.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,6 +225,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7586FEE321A1CC4B00936631 /* RequestResponse.swift in Sources */,
+				7586FEE121A1B37E00936631 /* Donation.swift in Sources */,
+				7586FEDE21A1A78900936631 /* RegisterDonationOperation.swift in Sources */,
 				7586FEC021A03DDC00936631 /* ViewController.swift in Sources */,
 				7586FEBE21A03DDC00936631 /* AppDelegate.swift in Sources */,
 				7586FEDA21A1779A00936631 /* AsyncOperation.swift in Sources */,

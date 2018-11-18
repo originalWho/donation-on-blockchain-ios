@@ -1,37 +1,14 @@
 import Foundation
 
-struct Donation: Codable {
+struct GetDonationChainResponse: Codable {
 
-    let balance: Int
-    let date: Date
-    let description: String
-    let stepID: Int
-    let amount: Int
-    let transitionDate: Date
-    let purpose: String
-    let accountNumber: Int
-    let taxID: String
-    let organizationName: String
+    let requestResponse: RequestResponse
+    let donations: [Donation]
 
-    private enum DonationCodingKey: String, CodingKey {
-        case balance
-        case date = "timeStamp"
-        case description
-        case stepID = "stepId"
-        case amount
-        case transitionDate
-        case purpose
-        case accountNumber
-        case taxID = "taxId"
-        case organizationName
+    private enum CodingKeys: String, CodingKey {
+        case requestResponse = "result"
+        case donations = "output"
     }
-
-}
-
-private struct GetDonationChainResponse: Codable {
-
-    let result: Int
-    let output: [Donation]
 
 }
 
@@ -40,7 +17,7 @@ final class GetDonationsChainOperation: AsyncOperation {
     // MARK: - Internal properties
 
     let donationID: String
-    var donations: [Donation]?
+    var result: GetDonationChainResponse?
 
     // MARK: - Private properties
 
@@ -115,11 +92,10 @@ final class GetDonationsChainOperation: AsyncOperation {
 
         do {
             let jsonDecoder = JSONDecoder()
-            let getDonationChainResponse = try jsonDecoder.decode(GetDonationChainResponse.self, from: data)
-            donations = getDonationChainResponse.output
+            result = try jsonDecoder.decode(GetDonationChainResponse.self, from: data)
         }
         catch {
-            NSLog("Could not parse data and cast it to type:\(GetDonationChainResponse.self). Error: \(error.localizedDescription)")
+            NSLog("Could not parse data and cast it to type:\(GetDonationChainResponse.self). Error: \(error)")
         }
     }
 
