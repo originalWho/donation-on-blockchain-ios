@@ -2,11 +2,10 @@ import Foundation
 
 typealias TransitionID = UInt32
 typealias TaxID = String
-typealias DonationAmount = UInt64
 typealias AccountID = String
 typealias TimeStamp = String
 
-struct Donation: Codable {
+struct DonationChainItem: Codable {
 
     let balance: DonationAmount
     let date: TimeStamp

@@ -3,11 +3,11 @@ import Foundation
 struct RegisterDonationResponse: Codable {
 
     let requestResponse: RequestResponse
-    let donationID: String
+    let donationChainID: DonationChainID
 
     private enum CodingKeys: String, CodingKey {
         case requestResponse = "result"
-        case donationID = "key"
+        case donationChainID = "key"
     }
 
 }

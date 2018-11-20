@@ -3,11 +3,11 @@ import Foundation
 struct GetDonationChainResponse: Codable {
 
     let requestResponse: RequestResponse
-    let donations: [Donation]
+    let donationChainItems: [DonationChainItem]
 
     private enum CodingKeys: String, CodingKey {
         case requestResponse = "result"
-        case donations = "output"
+        case donationChainItems = "output"
     }
 
 }
@@ -16,7 +16,7 @@ final class GetDonationsChainOperation: AsyncOperation {
 
     // MARK: - Internal properties
 
-    let donationID: String
+    let donationID: DonationChainID
     var result: GetDonationChainResponse?
 
     // MARK: - Private properties
@@ -39,7 +39,7 @@ final class GetDonationsChainOperation: AsyncOperation {
 
     // MARK: - Init
 
-    init(donationID: String, baseURL: URL, urlSession: URLSession = .shared) {
+    init(donationID: DonationChainID, baseURL: URL, urlSession: URLSession = .shared) {
         self.donationID = donationID
         self.baseURL = baseURL
         self.urlSession = urlSession
