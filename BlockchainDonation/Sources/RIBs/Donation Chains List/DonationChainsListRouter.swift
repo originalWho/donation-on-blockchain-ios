@@ -1,18 +1,15 @@
 import UIKit
 
-protocol DonationChainsListRouter: AnyObject {
-
-    func start()
-    func stop()
+protocol DonationChainsListRouter: ViewableRouter {
 
 }
 
 final class DonationChainsListRouterImpl: DonationChainsListRouter {
 
     let viewController: UIViewController
-    private let interactor: DonationChainsListInteractor
+    private let interactor: Interactor
 
-    init(interactor: DonationChainsListInteractor, viewController: UIViewController) {
+    init(interactor: Interactor, viewController: UIViewController) {
         self.interactor = interactor
         self.viewController = viewController
     }

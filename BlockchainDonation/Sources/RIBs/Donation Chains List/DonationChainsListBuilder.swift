@@ -1,9 +1,10 @@
 import Foundation
 
-struct DonationChainsListBuilder {
+struct DonationChainsListBuilder: Builder {
 
     struct Component {
         let client: Client
+        let storage: DonationChainStorage
     }
 
     private let componentFactory: DonationChainsListComponentFactory
@@ -12,13 +13,14 @@ struct DonationChainsListBuilder {
         self.componentFactory = componentFactory
     }
 
-    func build() -> DonationChainsListRouter {
+    func build() -> Router {
         let component = componentFactory.makeComponent()
 
         let view = DonationChainsListViewImpl.makeView()
         let presenter = DonationChainsListPresenterImpl()
         let interactor = DonationChainsListInteractorImpl(presenter: presenter,
-                                                          client: component.client)
+                                                          client: component.client,
+                                                          storage: component.storage)
         let router = DonationChainsListRouterImpl(interactor: interactor, viewController: view)
 
         view.eventHandler = presenter
