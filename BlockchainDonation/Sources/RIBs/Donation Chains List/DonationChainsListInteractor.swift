@@ -30,6 +30,7 @@ final class DonationChainsListInteractorImpl: DonationChainsListInteractor {
     }
 
     func stop() {
+        client.cancelRequests()
         client.delegate = nil
     }
 
@@ -43,7 +44,8 @@ final class DonationChainsListInteractorImpl: DonationChainsListInteractor {
     }
 
     func requestDonationChains() {
-
+        let identifiers = storage.chainsIdentifiers
+        identifiers.forEach { client.requestDonationChain(with: $0) }
     }
     
 }
@@ -51,21 +53,36 @@ final class DonationChainsListInteractorImpl: DonationChainsListInteractor {
 extension DonationChainsListInteractorImpl: ClientDelegate {
 
     func client(_ client: Client, onRegisterDonationDidCompleteWith donationChainID: DonationChainID) {
-        
+        guard let pendingDonation = pendingDonation else {
+            assertionFailure("Pending donation is nil, yet a donation has been registered.")
+            return
+        }
+
+        let donationChain = DonationChain(donation: pendingDonation,
+                                          identifier: donationChainID,
+                                          items: [])
+        storage.saveDonationChain(donationChain)
+        self.pendingDonation = nil
     }
 
     func client(_ client: Client, onRegisterDonationDidFinishWithError error: Error?) {
         // TODO: Schedule another attempt or present user a feedback
     }
 
-    func client(_ client: Client, onRequestDonationChainWithID: DonationChainID,
+    func client(_ client: Client, onRequestDonationChainWithID donationChainID: DonationChainID,
                 didCompleteWith donationChainItems: [DonationChainItem]) {
-        
+        guard var donationChain = storage.chain(with: donationChainID) else {
+            assertionFailure("Donation chain items request completed for an unknown id.")
+            return
+        }
+
+        donationChain.items = donationChainItems
+        storage.saveDonationChain(donationChain)
     }
 
-    func client(_ client: Client, onRequestDonationChainWithID: DonationChainID,
+    func client(_ client: Client, onRequestDonationChainWithID donationChainID: DonationChainID,
                 didFinishWithError error: Error?) {
-
+        // TODO: Schedule another attempt or present user a feedback
     }
 
 }

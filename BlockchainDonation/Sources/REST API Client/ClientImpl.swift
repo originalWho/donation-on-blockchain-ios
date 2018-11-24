@@ -96,6 +96,10 @@ final class ClientImpl: Client {
         operationQueue.addOperations(getDonationsChainOperation, getDonationChainCompletionOperation)
     }
 
+    func cancelRequests() {
+        operationQueue.cancelAllOperations()
+    }
+
 }
 
 // MARK: - Helper methods

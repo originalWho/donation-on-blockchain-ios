@@ -14,7 +14,7 @@ struct DonationChain {
 
     let donation: Donation
     let identifier: DonationChainID
-    let date: TimeStamp
-    let items: [DonationChainItem]
+//    let date: TimeStamp
+    var items: [DonationChainItem]
 
 }
