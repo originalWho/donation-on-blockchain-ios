@@ -7,10 +7,14 @@ protocol DonationChainsListInteractor: Interactor {
 
 }
 
-final class DonationChainsListInteractorImpl: DonationChainsListInteractor {
+final class DonationChainsListInteractorImpl: Interactor {
 
     var canRegisterDonation: Bool {
         return pendingDonation == nil
+    }
+
+    var canRequestDonationChains: Bool {
+        return requestedDonationChainsIDs.isEmpty
     }
 
     private let client: Client
@@ -18,6 +22,7 @@ final class DonationChainsListInteractorImpl: DonationChainsListInteractor {
     private let presenter: DonationChainsListPresenter
 
     private var pendingDonation: Donation?
+    private var requestedDonationChainsIDs: Set<DonationChainID> = []
 
     init(presenter: DonationChainsListPresenter, client: Client, storage: DonationChainStorage) {
         self.presenter = presenter
@@ -33,6 +38,10 @@ final class DonationChainsListInteractorImpl: DonationChainsListInteractor {
         client.cancelRequests()
         client.delegate = nil
     }
+    
+}
+
+extension DonationChainsListInteractorImpl: DonationChainsListInteractor {
 
     func registerDonation(_ donation: Donation) {
         guard canRegisterDonation else {
@@ -44,10 +53,14 @@ final class DonationChainsListInteractorImpl: DonationChainsListInteractor {
     }
 
     func requestDonationChains() {
-        let identifiers = storage.chainsIdentifiers
-        identifiers.forEach { client.requestDonationChain(with: $0) }
+        guard canRequestDonationChains else {
+            return
+        }
+
+        requestedDonationChainsIDs = Set(storage.chainsIdentifiers)
+        requestedDonationChainsIDs.forEach { client.requestDonationChain(with: $0) }
     }
-    
+
 }
 
 extension DonationChainsListInteractorImpl: ClientDelegate {
@@ -63,10 +76,13 @@ extension DonationChainsListInteractorImpl: ClientDelegate {
                                           items: [])
         storage.saveDonationChain(donationChain)
         self.pendingDonation = nil
+
+        presenter.onRegisterDonationDidComplete()
     }
 
     func client(_ client: Client, onRegisterDonationDidFinishWithError error: Error?) {
         // TODO: Schedule another attempt or present user a feedback
+        presenter.onRegisterDonationDidFinish(with: error)
     }
 
     func client(_ client: Client, onRequestDonationChainWithID donationChainID: DonationChainID,
@@ -78,11 +94,17 @@ extension DonationChainsListInteractorImpl: ClientDelegate {
 
         donationChain.items = donationChainItems
         storage.saveDonationChain(donationChain)
+        requestedDonationChainsIDs.remove(donationChainID)
+
+        if requestedDonationChainsIDs.isEmpty {
+            presenter.onRequestDonationChainsDidComplete()
+        }
     }
 
     func client(_ client: Client, onRequestDonationChainWithID donationChainID: DonationChainID,
                 didFinishWithError error: Error?) {
         // TODO: Schedule another attempt or present user a feedback
+        presenter.onRequestDonationChainsDidFinish(with: error)
     }
 
 }
