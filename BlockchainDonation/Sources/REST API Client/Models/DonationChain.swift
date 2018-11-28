@@ -14,7 +14,26 @@ struct DonationChain {
 
     let donation: Donation
     let identifier: DonationChainID
-//    let date: TimeStamp
-    var items: [DonationChainItem]
+    var date: TimeStamp?
+
+    var items: [DonationChainItem] {
+        didSet {
+            guard let firstItem = items.first else {
+                return
+            }
+
+            date = firstItem.date
+        }
+    }
+
+    init(donation: Donation,
+         identifier: DonationChainID,
+         date: TimeStamp? = nil,
+         items: [DonationChainItem] = []) {
+        self.donation = donation
+        self.identifier = identifier
+        self.date = date
+        self.items = items
+    }
 
 }

@@ -3,6 +3,7 @@ import Foundation
 protocol DonationChainStorage: AnyObject {
 
     var isEmpty: Bool { get }
+    var chains: [DonationChain] { get }
     var chainsIdentifiers: [DonationChainID] { get }
 
     func chain(with identifier: DonationChainID) -> DonationChain?
@@ -18,6 +19,14 @@ final class DonationChainStorageImpl: DonationChainStorage {
             isInternalStorageEmpty = self.internalStorage.isEmpty
         }
         return isInternalStorageEmpty
+    }
+
+    var chains: [DonationChain] {
+        var chains: [DonationChain] = []
+        syncQueue.sync { [unowned self] in
+            chains = Array(self.internalStorage.values)
+        }
+        return chains
     }
 
     var chainsIdentifiers: [DonationChainID] {
