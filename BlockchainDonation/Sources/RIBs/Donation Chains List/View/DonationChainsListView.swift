@@ -2,6 +2,8 @@ import UIKit
 
 protocol DonationChainsListView: AnyObject {
 
+    func update(with donationChains: [DonationChain])
+
     func showDonationChainFullInfo(for identifier: DonationChainID)
     func hideDonationChainFullInfo(for identifier: DonationChainID)
 
@@ -15,11 +17,13 @@ protocol DonationChainsListView: AnyObject {
 
 protocol DonationChainsListViewEventHandler: AnyObject {
 
+    func onDonationChainsUpdateRequested()
+
     func onDonationChainShowFullInfoRequested(for identifier: DonationChainID)
     func onDonationChainHideFullInfoRequested(for identifier: DonationChainID)
 
     func onShowRegisterDonationFormButtonPressed()
-    func onRegisterDonationButtonPressed()
+    func onRegisterDonationButtonPressed(amount: String, description: String)
     func onHideRegisterDonationFormButtonPressed()
 
 }

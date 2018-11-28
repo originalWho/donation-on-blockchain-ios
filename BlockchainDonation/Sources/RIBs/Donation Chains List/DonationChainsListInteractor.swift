@@ -72,8 +72,7 @@ extension DonationChainsListInteractorImpl: ClientDelegate {
         }
 
         let donationChain = DonationChain(donation: pendingDonation,
-                                          identifier: donationChainID,
-                                          items: [])
+                                          identifier: donationChainID)
         storage.saveDonationChain(donationChain)
         self.pendingDonation = nil
 
@@ -97,7 +96,7 @@ extension DonationChainsListInteractorImpl: ClientDelegate {
         requestedDonationChainsIDs.remove(donationChainID)
 
         if requestedDonationChainsIDs.isEmpty {
-            presenter.onRequestDonationChainsDidComplete()
+            presenter.onRequestDonationChainsDidComplete(with: storage.chains)
         }
     }
 
