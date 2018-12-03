@@ -42,8 +42,8 @@ final class DonationChainsListViewImpl: UIViewController {
     // MARK: - Internal static properties
 
     static func makeView() -> DonationChainsListViewImpl {
-        // TODO: Instantiate from Storyboard
-        return DonationChainsListViewImpl()
+        let storyboard = UIStoryboard(name: "DonationChainsList", bundle: .main)
+        return storyboard.instantiateViewController(withIdentifier: DonationChainsListViewImpl.identifier) as! DonationChainsListViewImpl
     }
 
     // MARK: - Internal properties

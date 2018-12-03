@@ -33,6 +33,7 @@
 		7586FF0221A9CFB700936631 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FF0121A9CFB700936631 /* Identifiable.swift */; };
 		7586FF0621ADC78700936631 /* DonationChainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FF0521ADC78700936631 /* DonationChainTableViewCell.swift */; };
 		7586FF0821ADC7A800936631 /* DonationChainItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FF0721ADC7A800936631 /* DonationChainItemTableViewCell.swift */; };
+		75E40F2121B5B6C600662554 /* ServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E40F2021B5B6C600662554 /* ServicesProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		7586FF0121A9CFB700936631 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		7586FF0521ADC78700936631 /* DonationChainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationChainTableViewCell.swift; sourceTree = "<group>"; };
 		7586FF0721ADC7A800936631 /* DonationChainItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationChainItemTableViewCell.swift; sourceTree = "<group>"; };
+		75E40F2021B5B6C600662554 /* ServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 				7586FED521A16BE400936631 /* REST API Client */,
 				7586FED421A16BBE00936631 /* Utils */,
 				7586FEBD21A03DDC00936631 /* AppDelegate.swift */,
+				75E40F2021B5B6C600662554 /* ServicesProvider.swift */,
 				7586FEBF21A03DDC00936631 /* ViewController.swift */,
 			);
 			path = Sources;
@@ -311,6 +314,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75E40F2121B5B6C600662554 /* ServicesProvider.swift in Sources */,
 				7586FEE321A1CC4B00936631 /* RequestResponse.swift in Sources */,
 				7586FEE521A48CA300936631 /* DonationChain.swift in Sources */,
 				7586FEFD21A7344A00936631 /* DonationChainStorage.swift in Sources */,
