@@ -67,6 +67,8 @@ final class DonationChainsListViewImpl: UIViewController {
         }
     }
 
+    private let containerStackViewBottomConstraintConstant: CGFloat = 30.0
+
     // MARK: - IBOutlets
 
     @IBOutlet private weak var tableView: UITableView!
@@ -84,6 +86,8 @@ final class DonationChainsListViewImpl: UIViewController {
     @IBOutlet private weak var donateButton: UIButton!
     @IBOutlet private weak var cancelButton: UIButton!
 
+    @IBOutlet private weak var containerStackViewBottomConstraint: NSLayoutConstraint!
+
     // MARK: - Internal methods
 
     override func viewDidLoad() {
@@ -91,6 +95,16 @@ final class DonationChainsListViewImpl: UIViewController {
         configureRefreshControl()
         setInitialViewConfiguration()
         setDefaultViewConfiguration()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        subscribeForNotifications()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        unsubscribeForNotifications()
     }
 
     // MARK: - Private methods
@@ -110,8 +124,12 @@ final class DonationChainsListViewImpl: UIViewController {
 
     private func setDefaultViewConfiguration() {
         dimmerView.alpha = 0.0
+        donationAmountTextField.text = nil
         donationAmountTextField.isEnabled = true
+        donationAmountTextField.resignFirstResponder()
+        donationDescriptionTextView.text = "Why?"
         donationDescriptionTextView.isEditable = true
+        donationDescriptionTextView.resignFirstResponder()
         registerFormContainerView.isHidden = true
         donationAmountTextField.isHidden = false
         donationDescriptionTextView.isHidden = false
@@ -119,8 +137,9 @@ final class DonationChainsListViewImpl: UIViewController {
         registerDoneDescriptionLabel.isHidden = true
         activityIndicator.isHidden = true
         cancelButton.isHidden = true
-
+        donateButton.isEnabled = true
         donateButton.setTitle("Donate", for: .normal)
+        activityIndicator.stopAnimating()
     }
 
     private func handleStateTransition(from oldState: State, to newState: State) {
@@ -129,7 +148,7 @@ final class DonationChainsListViewImpl: UIViewController {
             dimmerView.alpha = 1.0
             registerFormContainerView.isHidden = false
             cancelButton.isHidden = false
-            donateButton.isEnabled = false
+//            donateButton.isEnabled = false
             donateButton.setTitle("Send", for: .normal)
 
         case (.donationFormVisible, .default):
@@ -141,6 +160,10 @@ final class DonationChainsListViewImpl: UIViewController {
             activityIndicator.isHidden = false
             cancelButton.isHidden = true
             donateButton.isEnabled = false
+            donationAmountTextField.resignFirstResponder()
+            donationDescriptionTextView.resignFirstResponder()
+            donateButton.setTitle("Sending...", for: .normal)
+            activityIndicator.startAnimating()
 
         case (.donationFormProcessing, .donationFormDone):
             donationAmountTextField.isHidden = true
@@ -150,6 +173,7 @@ final class DonationChainsListViewImpl: UIViewController {
             activityIndicator.isHidden = true
             donateButton.isEnabled = true
             donateButton.setTitle("Done", for: .normal)
+            activityIndicator.stopAnimating()
 
         case (.donationFormDone, .default):
             setDefaultViewConfiguration()
@@ -160,6 +184,59 @@ final class DonationChainsListViewImpl: UIViewController {
         }
 
         registerFormContainerStackView.layoutIfNeeded()
+    }
+
+    private func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onKeyboardWillShow(with:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onKeyboardWillHide(with:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onKeyboardWillChangeFrame(with:)),
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
+                                               object: nil)
+    }
+
+    private func unsubscribeForNotifications() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+
+    private func adjustContainerStackViewPosition(with notification: Notification, for keyboardWillShow: Bool) {
+        guard
+            let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+            let animationDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval
+        else {
+            return
+        }
+
+        let multiplier: CGFloat = keyboardWillShow ? 1.0 : 0.0
+        let keyboardHeight = multiplier * keyboardFrame.height
+        let constraintConstant = containerStackViewBottomConstraintConstant + keyboardHeight
+
+        UIView.animate(withDuration: animationDuration) { [unowned self] in
+            self.containerStackViewBottomConstraint.constant = constraintConstant
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    // MARK: - Actions
+
+    @objc private func onKeyboardWillShow(with notification: Notification) {
+        adjustContainerStackViewPosition(with: notification, for: true)
+    }
+
+    @objc private func onKeyboardWillHide(with notification: Notification) {
+        adjustContainerStackViewPosition(with: notification, for: false)
+    }
+
+    @objc private func onKeyboardWillChangeFrame(with notification: Notification) {
+        adjustContainerStackViewPosition(with: notification, for: false)
     }
 
     @objc private func onRefreshControlValueChanged(_ sender: UIRefreshControl) {
@@ -267,11 +344,20 @@ extension DonationChainsListViewImpl: UITableViewDataSource {
 
     private func donationChainTableViewCell(at indexPath: IndexPath, in tableView: UITableView) -> DonationChainTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DonationChainTableViewCell.identifier, for: indexPath) as! DonationChainTableViewCell
+
+        let donationChain = donationChains[indexPath.section]
+        let state: DonationChainTableViewCell.State = expandedDonationChainsIDs.contains(donationChain.identifier) ? .expanded : .collapsed
+        cell.configure(with: donationChain, for: state)
+
         return cell
     }
 
     private func donationChainItemTableViewCell(at indexPath: IndexPath, in tableView: UITableView) -> DonationChainItemTableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DonationChainItemTableViewCell.identifier, for: indexPath) as! DonationChainItemTableViewCell
+
+        let donationChainItem = donationChains[indexPath.section].items[indexPath.row - 1]
+        cell.configure(with: donationChainItem)
+
         return cell
     }
 

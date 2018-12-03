@@ -15,9 +15,15 @@ final class DonationChainTableViewCell: UITableViewCell {
     @IBOutlet private weak var transactionNumberLabel: UILabel!
     @IBOutlet private weak var containerView: UIView!
 
+    private let collapsedStateNumberOfLines = 2
+
     func configure(with donationChain: DonationChain, for state: State) {
         donationAmountLabel.text = "$\(donationChain.donation.amount)"
         descriptionLabel.text = donationChain.donation.description
+
+        descriptionLabel.lineBreakMode = (state == .collapsed) ? .byClipping : .byWordWrapping
+        descriptionLabel.numberOfLines = (state == .collapsed) ? collapsedStateNumberOfLines : 0
+
         timestampLabel.text = donationChain.date
         timestampLabel.isHidden = (state == .collapsed)
 
