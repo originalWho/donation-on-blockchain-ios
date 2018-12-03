@@ -21,7 +21,13 @@ final class DonationChainsListPresenterImpl {
 extension DonationChainsListPresenterImpl: DonationChainsListPresenter {
 
     func onRegisterDonationDidComplete() {
-        view?.showDonationRegistrationProcessingDone()
+        DispatchQueue.main.async { [weak view] in
+            view?.showDonationRegistrationProcessingDone()
+        }
+
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.onDonationChainsUpdateRequested()
+        }
     }
 
     func onRegisterDonationDidFinish(with error: Error?) {
@@ -29,7 +35,9 @@ extension DonationChainsListPresenterImpl: DonationChainsListPresenter {
     }
 
     func onRequestDonationChainsDidComplete(with donationChains: [DonationChain]) {
-        view?.update(with: donationChains)
+        DispatchQueue.main.async { [weak view] in
+            view?.update(with: donationChains)
+        }
     }
 
     func onRequestDonationChainsDidFinish(with error: Error?) {

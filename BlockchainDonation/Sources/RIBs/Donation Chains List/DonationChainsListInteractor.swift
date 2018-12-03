@@ -45,6 +45,8 @@ extension DonationChainsListInteractorImpl: DonationChainsListInteractor {
 
     func registerDonation(_ donation: Donation) {
         guard canRegisterDonation else {
+//            presenter.onRegisterDonationDidFinish(with: error)
+            presenter.onRegisterDonationDidComplete()
             return
         }
 
@@ -53,7 +55,9 @@ extension DonationChainsListInteractorImpl: DonationChainsListInteractor {
     }
 
     func requestDonationChains() {
-        guard canRequestDonationChains else {
+        guard canRequestDonationChains, !storage.chainsIdentifiers.isEmpty else {
+//            presenter.onRequestDonationChainsDidFinish(with: error)
+            presenter.onRequestDonationChainsDidComplete(with: [])
             return
         }
 
