@@ -13,6 +13,8 @@ protocol DonationChainStorage: AnyObject {
 
 final class DonationChainStorageImpl: DonationChainStorage {
 
+    private typealias InternalStorage = [DonationChainID: DonationChain]
+
     var isEmpty: Bool {
         var isInternalStorageEmpty: Bool = false
         syncQueue.sync { [unowned self] in
@@ -37,13 +39,21 @@ final class DonationChainStorageImpl: DonationChainStorage {
         return identifiers
     }
 
-    private var internalStorage: [DonationChainID: DonationChain] = [:]
+    private var internalStorage: InternalStorage = [:]
 
     private lazy var syncQueue: DispatchQueue = {
         let queue = DispatchQueue(label: "DonationChainStorageImplDispatchQueue.\(UUID().uuidString)",
             attributes: .concurrent)
         return queue
     }()
+
+    init() {
+        guard let internalStorage = restorePersistentInternalStorage() else {
+            return
+        }
+
+        self.internalStorage = internalStorage
+    }
 
     func chain(with identifier: DonationChainID) -> DonationChain? {
         var donationChain: DonationChain?
@@ -56,7 +66,32 @@ final class DonationChainStorageImpl: DonationChainStorage {
     func saveDonationChain(_ donationChain: DonationChain) {
         syncQueue.async(flags: .barrier) { [unowned self] in
             self.internalStorage[donationChain.identifier] = donationChain
+            self.saveInternalStoragePersistently()
         }
+    }
+
+    private func restorePersistentInternalStorage() -> InternalStorage? {
+        guard let data = UserDefaults.standard.data(forKey: .internalStorageKey) else {
+            return nil
+        }
+
+        let decoder = JSONDecoder()
+        let decodedStorage = try? decoder.decode(InternalStorage.self, from: data)
+        return decodedStorage
+    }
+
+    private func saveInternalStoragePersistently() {
+        let encoder = JSONEncoder()
+        let encodedStorage = try? encoder.encode(internalStorage)
+        UserDefaults.standard.set(encodedStorage, forKey: .internalStorageKey)
+    }
+
+}
+
+private extension String {
+
+    static var internalStorageKey: String {
+        return "internalStorageKey"
     }
 
 }

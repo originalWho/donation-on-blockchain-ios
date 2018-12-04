@@ -3,14 +3,14 @@ import Foundation
 typealias DonationAmount = UInt64
 typealias DonationChainID = String
 
-struct Donation {
+struct Donation: Codable {
 
     let amount: DonationAmount
     let description: String
 
 }
 
-struct DonationChain {
+struct DonationChain: Codable {
 
     let donation: Donation
     let identifier: DonationChainID
