@@ -17,6 +17,12 @@ final class DonationChainTableViewCell: UITableViewCell {
 
     private let collapsedStateNumberOfLines = 2
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        containerView.layer.cornerRadius = 10.0
+        transactionNumberContainerView.layer.cornerRadius = transactionNumberContainerView.bounds.width * 0.5
+    }
+
     func configure(with donationChain: DonationChain, for state: State) {
         donationAmountLabel.text = "$\(donationChain.donation.amount)"
         descriptionLabel.text = donationChain.donation.description
@@ -24,8 +30,7 @@ final class DonationChainTableViewCell: UITableViewCell {
         descriptionLabel.lineBreakMode = (state == .collapsed) ? .byClipping : .byWordWrapping
         descriptionLabel.numberOfLines = (state == .collapsed) ? collapsedStateNumberOfLines : 0
 
-        timestampLabel.text = donationChain.date
-        timestampLabel.isHidden = (state == .collapsed)
+        timestampLabel.text = (state == .collapsed) ? nil : donationChain.date
 
         if let lastDonationItemBalance = donationChain.items.last?.balance {
             donationRemainingAmountLabel.text = (lastDonationItemBalance == 0)
@@ -37,7 +42,13 @@ final class DonationChainTableViewCell: UITableViewCell {
         }
 
         transactionNumberLabel.text = "\(donationChain.items.count)"
-        // TODO: Configure containerView and transactionNumberContainerView
+
+        transactionNumberLabel.textColor = (state == .collapsed)
+            ? .white
+            : containerView.backgroundColor
+        transactionNumberContainerView.backgroundColor = (state == .collapsed)
+            ? UIColor(white: 1.0, alpha: 0.3)
+            : UIColor(white: 1.0, alpha: 1.0)
     }
 
 }

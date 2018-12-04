@@ -2,6 +2,8 @@ import Foundation
 
 protocol DonationChainsListInteractor: Interactor {
 
+    var donationChains: [DonationChain] { get }
+
     func registerDonation(_ donation: Donation)
     func requestDonationChains()
 
@@ -15,6 +17,10 @@ final class DonationChainsListInteractorImpl: Interactor {
 
     var canRequestDonationChains: Bool {
         return requestedDonationChainsIDs.isEmpty
+    }
+
+    var donationChains: [DonationChain] {
+        return storage.chains
     }
 
     private let client: Client

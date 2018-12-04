@@ -13,7 +13,7 @@ struct DonationChainsListBuilder: Builder {
         self.componentFactory = componentFactory
     }
 
-    func build() -> Router {
+    func build() -> ViewableRouter {
         let component = componentFactory.makeComponent()
 
         let view = DonationChainsListViewImpl.makeView()

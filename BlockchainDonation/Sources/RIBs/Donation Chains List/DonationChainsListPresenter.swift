@@ -50,6 +50,14 @@ extension DonationChainsListPresenterImpl: DonationChainsListPresenter {
 
 extension DonationChainsListPresenterImpl: DonationChainsListViewEventHandler {
 
+    func onViewDidLoad() {
+        guard let donationChains = interactor?.donationChains else {
+            return
+        }
+
+        view?.update(with: donationChains)
+    }
+
     func onDonationChainsUpdateRequested() {
         interactor?.requestDonationChains()
     }

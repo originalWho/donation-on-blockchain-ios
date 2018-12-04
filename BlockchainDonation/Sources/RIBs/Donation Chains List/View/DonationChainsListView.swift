@@ -17,6 +17,8 @@ protocol DonationChainsListView: AnyObject {
 
 protocol DonationChainsListViewEventHandler: AnyObject {
 
+    func onViewDidLoad()
+
     func onDonationChainsUpdateRequested()
 
     func onDonationChainShowFullInfoRequested(for identifier: DonationChainID)
@@ -69,6 +71,8 @@ final class DonationChainsListViewImpl: UIViewController {
 
     private let containerStackViewBottomConstraintConstant: CGFloat = 30.0
 
+    private var isEditingDescription: Bool = false
+
     // MARK: - IBOutlets
 
     @IBOutlet private weak var tableView: UITableView!
@@ -95,6 +99,19 @@ final class DonationChainsListViewImpl: UIViewController {
         configureRefreshControl()
         setInitialViewConfiguration()
         setDefaultViewConfiguration()
+
+        tableView.sectionHeaderHeight = .leastNormalMagnitude
+        tableView.estimatedSectionHeaderHeight = .leastNormalMagnitude
+        tableView.sectionFooterHeight  = .leastNormalMagnitude
+        tableView.estimatedSectionFooterHeight = .leastNormalMagnitude
+
+        donationDescriptionTextView.delegate = self
+        eventHandler?.onViewDidLoad()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        configureLayers()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -109,6 +126,20 @@ final class DonationChainsListViewImpl: UIViewController {
 
     // MARK: - Private methods
 
+    private func configureLayers() {
+        registerFormContainerView.layer.cornerRadius = 16.0
+        registerFormContainerView.layer.shadowOpacity = 0.3
+        registerFormContainerView.layer.shadowRadius = 12.0
+        registerFormContainerView.layer.shadowOffset = CGSize(width: 6.0, height: 6.0)
+        registerFormContainerView.layer.shadowColor = UIColor.black.cgColor
+
+        donateButtonContainerView.layer.cornerRadius = 8.0
+        donateButtonContainerView.layer.shadowOpacity = 0.3
+        donateButtonContainerView.layer.shadowRadius = 8.0
+        donateButtonContainerView.layer.shadowOffset = CGSize(width: 4.0, height: 4.0)
+        donateButtonContainerView.layer.shadowColor = UIColor.black.cgColor
+    }
+
     private func configureRefreshControl() {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self,
@@ -119,7 +150,6 @@ final class DonationChainsListViewImpl: UIViewController {
 
     private func setInitialViewConfiguration() {
         donationAmountTextField.placeholder = "How much?"
-//        donationDescriptionTextView.place
     }
 
     private func setDefaultViewConfiguration() {
@@ -128,6 +158,7 @@ final class DonationChainsListViewImpl: UIViewController {
         donationAmountTextField.isEnabled = true
         donationAmountTextField.resignFirstResponder()
         donationDescriptionTextView.text = "Why?"
+        donationDescriptionTextView.textColor = .lightGray
         donationDescriptionTextView.isEditable = true
         donationDescriptionTextView.resignFirstResponder()
         registerFormContainerView.isHidden = true
@@ -140,6 +171,8 @@ final class DonationChainsListViewImpl: UIViewController {
         donateButton.isEnabled = true
         donateButton.setTitle("Donate", for: .normal)
         activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
+        isEditingDescription = false
     }
 
     private func handleStateTransition(from oldState: State, to newState: State) {
@@ -164,6 +197,7 @@ final class DonationChainsListViewImpl: UIViewController {
             donationDescriptionTextView.resignFirstResponder()
             donateButton.setTitle("Sending...", for: .normal)
             activityIndicator.startAnimating()
+            activityIndicator.isHidden = false
 
         case (.donationFormProcessing, .donationFormDone):
             donationAmountTextField.isHidden = true
@@ -174,6 +208,7 @@ final class DonationChainsListViewImpl: UIViewController {
             donateButton.isEnabled = true
             donateButton.setTitle("Done", for: .normal)
             activityIndicator.stopAnimating()
+            activityIndicator.isHidden = true
 
         case (.donationFormDone, .default):
             setDefaultViewConfiguration()
@@ -223,6 +258,27 @@ final class DonationChainsListViewImpl: UIViewController {
             self.containerStackViewBottomConstraint.constant = constraintConstant
             self.view.layoutIfNeeded()
         }
+    }
+
+    private func updateDonationChain(with identifier: DonationChainID, shouldExpand: Bool) {
+        guard let index = donationChains.firstIndex(where: { $0.identifier == identifier }) else {
+            return
+        }
+
+        let batchUpdates: () -> Void = { [unowned self] in
+            let itemsCount = self.donationChains[index].items.count
+            let indexPaths: [IndexPath] = (1...itemsCount).map { IndexPath(row: $0, section: index) }
+
+            self.tableView.reloadRows(at: [IndexPath(row: 0, section: index)], with: .fade)
+            if shouldExpand {
+                self.tableView.insertRows(at: indexPaths, with: .middle)
+            }
+            else {
+                self.tableView.deleteRows(at: indexPaths, with: .middle)
+            }
+        }
+
+        tableView.performBatchUpdates(batchUpdates)
     }
 
     // MARK: - Actions
@@ -290,12 +346,12 @@ extension DonationChainsListViewImpl: DonationChainsListView {
 
     func showDonationChainFullInfo(for identifier: DonationChainID) {
         expandedDonationChainsIDs.insert(identifier)
-        tableView.reloadData() // TODO: Switch to animated updates
+        updateDonationChain(with: identifier, shouldExpand: true)
     }
 
     func hideDonationChainFullInfo(for identifier: DonationChainID) {
         expandedDonationChainsIDs.remove(identifier)
-        tableView.reloadData() // TODO: Switch to animated updates
+        updateDonationChain(with: identifier, shouldExpand: false)
     }
 
     func showRegisterDonationForm() {
@@ -380,6 +436,20 @@ extension DonationChainsListViewImpl: UITableViewDelegate {
         else {
             eventHandler?.onDonationChainShowFullInfoRequested(for: donationChainID)
         }
+    }
+
+}
+
+extension DonationChainsListViewImpl: UITextViewDelegate {
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        guard !isEditingDescription else {
+            return
+        }
+
+        textView.text = nil
+        textView.textColor = .black
+        isEditingDescription = true
     }
 
 }

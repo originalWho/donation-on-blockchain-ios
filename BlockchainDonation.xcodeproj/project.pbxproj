@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7586FEBE21A03DDC00936631 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FEBD21A03DDC00936631 /* AppDelegate.swift */; };
-		7586FEC021A03DDC00936631 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7586FEBF21A03DDC00936631 /* ViewController.swift */; };
 		7586FEC321A03DDC00936631 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7586FEC121A03DDC00936631 /* Main.storyboard */; };
 		7586FEC521A03DDE00936631 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7586FEC421A03DDE00936631 /* Assets.xcassets */; };
 		7586FEC821A03DDE00936631 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7586FEC621A03DDE00936631 /* LaunchScreen.storyboard */; };
@@ -39,7 +38,6 @@
 /* Begin PBXFileReference section */
 		7586FEBA21A03DDC00936631 /* BlockchainDonation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlockchainDonation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7586FEBD21A03DDC00936631 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7586FEBF21A03DDC00936631 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7586FEC221A03DDC00936631 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7586FEC421A03DDE00936631 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7586FEC721A03DDE00936631 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -123,7 +121,6 @@
 				7586FED421A16BBE00936631 /* Utils */,
 				7586FEBD21A03DDC00936631 /* AppDelegate.swift */,
 				75E40F2021B5B6C600662554 /* ServicesProvider.swift */,
-				7586FEBF21A03DDC00936631 /* ViewController.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -321,7 +318,6 @@
 				7586FEE121A1B37E00936631 /* DonationChainItem.swift in Sources */,
 				7586FEDE21A1A78900936631 /* RegisterDonationOperation.swift in Sources */,
 				7586FF0621ADC78700936631 /* DonationChainTableViewCell.swift in Sources */,
-				7586FEC021A03DDC00936631 /* ViewController.swift in Sources */,
 				7586FEF921A730A600936631 /* Builder.swift in Sources */,
 				7586FEBE21A03DDC00936631 /* AppDelegate.swift in Sources */,
 				7586FEEB21A49AF300936631 /* DonationChainsListInteractor.swift in Sources */,
